@@ -1,13 +1,3 @@
-# whoopened.com
-
-### Load GeoIP2 City Datase
-
-```
-python manage.py import geonames
-python manage.py import geolite
-```
-
-
 Basic Commands
 --------------
 
