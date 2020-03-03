@@ -1,5 +1,5 @@
-from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, DateField
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db.models import CharField, DateField, EmailField
 from imagefield.fields import ImageField
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -26,18 +26,59 @@ Gender_CHOICES =(
     ("N", _("Non-Binary")),
 )
 
+
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and password."""
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
+
 class User(AbstractUser):
+    """User model."""
+    username = None
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
     phone_number = CharField(max_length=256, blank=True, null=True)
-    birthdate = DateField(_("Date of birth"))
-    citizenship = CountryField(blank_label='(select citizenship)')
+    birthdate = DateField(_("Date of birth"), blank=True, null=True)
+    citizenship = CountryField(blank_label='(select citizenship)', blank=True, null=True)
     avatar = ImageField(_("avatar"), upload_to="avatars", blank=True, auto_add_fields=True,
                         formats={
                             "thumb": ["default", ("crop", (240, 300))],
                             "desktop": ["default", ("thumbnail", (500, 500))],
                         })
-    gender = CharField(choices=Gender_CHOICES, max_length=1)
-    positions = MultiSelectField(choices=Position_CHOICES)
-    certifications = MultiSelectField(choices=Certification_CHOICES)
+    gender = CharField(choices=Gender_CHOICES, max_length=1, blank=True, null=True)
+    positions = MultiSelectField(choices=Position_CHOICES, blank=True, null=True)
+    certifications = MultiSelectField(choices=Certification_CHOICES, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"id": self.id})
