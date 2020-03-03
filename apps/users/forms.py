@@ -19,6 +19,6 @@ class CustomSignupForm(SignupForm):
         user.last_name = self.cleaned_data['last_name']
         user.birthdate = self.cleaned_data['birthdate']
         user.citizenship = self.cleaned_data['citizenship']
-        user.gender = self.cleaned_data['birthdate']
+        user.gender = self.cleaned_data['gender']
         user.save()
         return user

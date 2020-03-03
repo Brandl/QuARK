@@ -77,7 +77,7 @@ THIRD_PARTY_APPS = [
     'multiselectfield',
     'django_countries',
     'termsandconditions',
-    'imagefield',
+    'sorl.thumbnail',
 ]
 
 LOCAL_APPS = [

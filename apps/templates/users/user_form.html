@@ -6,7 +6,7 @@
 {% block content %}
 
   <h1>{{ object.first_name }} {{ object.last_name }}</h1>
-  <form method="post" action="{% url 'users:update' %}">
+  <form method="post" enctype="multipart/form-data" action="{% url 'users:update' %}">
     {% csrf_token %}
     {{ form|bulma }}
 

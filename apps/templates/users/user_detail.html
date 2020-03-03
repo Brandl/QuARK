@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}Player: {{ object.first_name }} {{ object.last_name }}{% endblock %}
 
@@ -11,6 +12,9 @@
 
 {% if object == request.user %}
 <!-- Action buttons -->
+    {% thumbnail object.image "100x100" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
 
     <a class="button is-primary" href="{% url 'users:update' %}" role="button">My Info</a>
     <a class="button is-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>

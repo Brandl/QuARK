@@ -1,11 +1,11 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models import CharField, DateField, EmailField
-from imagefield.fields import ImageField
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from multiselectfield import MultiSelectField
 from django_countries.fields import CountryField
+from sorl.thumbnail import ImageField
 
 Position_CHOICES =(
     ("C", "Chaser"),
@@ -71,11 +71,7 @@ class User(AbstractUser):
     phone_number = CharField(max_length=256, blank=True, null=True)
     birthdate = DateField(_("Date of birth"), blank=True, null=True)
     citizenship = CountryField(blank_label='(select citizenship)', blank=True, null=True)
-    avatar = ImageField(_("avatar"), upload_to="avatars", blank=True, auto_add_fields=True,
-                        formats={
-                            "thumb": ["default", ("crop", (240, 300))],
-                            "desktop": ["default", ("thumbnail", (500, 500))],
-                        })
+    image = ImageField(_("Player profile image"), upload_to="avatars", blank=True)
     gender = CharField(choices=Gender_CHOICES, max_length=1, blank=True, null=True)
     positions = MultiSelectField(choices=Position_CHOICES, blank=True, null=True)
     certifications = MultiSelectField(choices=Certification_CHOICES, blank=True, null=True)
