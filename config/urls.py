@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.views import defaults as default_views
 from rest_framework.documentation import include_docs_urls
 from rest_framework import routers
@@ -15,6 +15,7 @@ from apps.contrib.views import HomeTemplateView
 
 urlpatterns = [
     path("", HomeTemplateView.as_view(), name="home"),
+    path( "covid19/", RedirectView.as_view(url='/static/files/qat_covid_praevention.pdf'), name="about"),
     path( "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"),
     path(settings.ADMIN_URL, admin.site.urls),
     # TODO: the namespace inconsitencies here will drive me nuts sooner or later...
