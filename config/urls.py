@@ -15,8 +15,9 @@ from apps.contrib.views import HomeTemplateView
 
 urlpatterns = [
     path("", HomeTemplateView.as_view(), name="home"),
-    path( "covid19/", RedirectView.as_view(url='/static/files/qat_covid_praevention.pdf'), name="about"),
+    path( "covid19/", RedirectView.as_view(url='/static/files/qat_covid_praevention.pdf'), name="covid19"),
     path( "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"),
+    path( "harassment/", TemplateView.as_view(template_name="pages/harassment.html"), name="harassment"),
     path(settings.ADMIN_URL, admin.site.urls),
     # TODO: the namespace inconsitencies here will drive me nuts sooner or later...
     path("users/", include("apps.users.urls", namespace="users")),
