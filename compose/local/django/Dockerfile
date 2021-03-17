@@ -16,6 +16,9 @@ RUN apk update \
   && apk add libmagic \
   # https://docs.djangoproject.com/en/dev/ref/django-admin/#dbshell
   && apk add postgresql-client
+  
+# update pip
+RUN /usr/local/bin/python -m pip install --upgrade pip
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
